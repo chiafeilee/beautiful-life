@@ -1,1 +1,1 @@
-A set of tools that used in every day work, which makes beautiful life
+A set of tools that used in every day work, which make a beautiful life
