@@ -11,7 +11,7 @@ export PATH
 
 install_requirements(){
     echo '--> Update apt mirrors to Ali mirrors'
-    sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
+    sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
     sudo sed -i 's#\(//\)\([a-zA-Z]*.ubuntu\)#\1mirrors.aliyun#' /etc/apt/sources.list
 
     echo '--> Initial apt-get update'
