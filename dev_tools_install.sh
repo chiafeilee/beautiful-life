@@ -4,9 +4,10 @@ set -e
 
 # A script to setup dev tools for newly installed linux.
 # Don't run via 'sudo'
-# For now just suport ubuntu-16.04.
+# For now just suport ubuntu.
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+DOCKER_CONF_FILE=/etc/docker/daemon.json
 export PATH
 
 install_requirements(){
@@ -58,17 +59,23 @@ install_zsh(){
 
 install_docker(){
     if ! command -v docker &>/dev/null; then
-        echo '--> Installing docker'
-        curl -fsSL https://get.docker.com | sh
+        echo '--> Installing docker-ce'
+        curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository \
+            "deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu \
+            $(lsb_release -cs) \
+            stable"
+        sudo apt-get update -qq
+        sudo apt-get install -y docker-ce
 
         echo '--> Setting current user to docker group'
         sudo usermod -aG docker $USER
 
-        echo '--> Starting docker'
-        sudo service docker start
-
         echo '--> Changing docker registry mirrors'
-        sudo tee /etc/docker/daemon.json <<-'EOF' 
+        if ! test -f "$DOCKER_CONF_FILE"; then
+            sudo touch "$DOCKER_CONF_FILE"
+        fi
+        sudo tee "$DOCKER_CONF_FILE" <<-'EOF' 
 {
   "registry-mirrors": [
     "https://dockerhub.azk8s.cn",
