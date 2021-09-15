@@ -32,7 +32,8 @@ install_requirements(){
 install_git(){
     if ! command -v git &>/dev/null; then
         echo '--> Installing git'
-        sudo apt-get update -qq && apt install git make -y -qq
+        sudo apt-get update -qq
+        sudo apt install git make -y -qq
     fi
 }
 
@@ -52,7 +53,7 @@ install_zsh(){
         if ! chsh -s "$(which zsh)"; then
             echo '--> chsh command unsuccessfully, change your default shell manually'
         else
-            echo '--> Shell successfully changed to zsh, you may logout to use zsh shell'
+            echo '--> Shell successfully changed to zsh, run zsh after finish installation'
         fi
     fi
 }
@@ -75,7 +76,7 @@ install_docker(){
         if ! test -f "$DOCKER_CONF_FILE"; then
             sudo touch "$DOCKER_CONF_FILE"
         fi
-        sudo tee "$DOCKER_CONF_FILE" <<-'EOF' 
+        sudo tee "$DOCKER_CONF_FILE" <<-'EOF'
 {
   "registry-mirrors": [
     "https://dockerhub.azk8s.cn",
